@@ -1,3 +1,2 @@
 # terraform
-terraform repo for EPAM
-push from ubuntu
+terraform repo testing
