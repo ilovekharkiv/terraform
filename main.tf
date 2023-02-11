@@ -84,10 +84,6 @@ data "aws_ami" "latest-amazon-linux-image" {
     }
 }
 
-output "aws_ami_id" {
-    value = data.aws_ami.latest-amazon-linux-image.id
-}
-
 resource "aws_key_pair" "dev-key-pair" {
     key_name = "terraform"
     public_key = file(var.public_key_location)
@@ -114,4 +110,8 @@ output "ec2_public_ips" {
 
 output "ec2_public_dns" {
     value = aws_instance.development.public_dns
+}
+
+output "aws_ami_id" {
+    value = data.aws_ami.latest-amazon-linux-image.id
 }
