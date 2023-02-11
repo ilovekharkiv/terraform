@@ -7,6 +7,8 @@ variable "subnet_cidr_block" {}
 variable "avail_zone" {}
 variable "env_prefix" {}
 variable "my_ip" {}
+variable "instance_type" {}
+variable "public_key_location" {}
 
 resource "aws_vpc" "my-vpc" {
     cidr_block = var.vpc_cidr_block
@@ -82,8 +84,9 @@ data "aws_ami" "latest-amazon-linux-image" {
     }
 }
 
-output "aws_ami_id" {
-    value = data.aws_ami.latest-amazon-linux-image.id
+resource "aws_key_pair" "dev-key-pair" {
+    key_name = "terraform"
+    public_key = file(var.public_key_location)
 }
 
 resource "aws_instance" "development" {
@@ -93,7 +96,8 @@ resource "aws_instance" "development" {
     subnet_id = aws_subnet.my-subnet-1.id
     vpc_security_group_ids = [aws_default_security_group.default-sg.id]
     availability_zone = var.avail_zone
+}
 
-    associate_public_ip_address = true
-    
+output "aws_ami_id" {
+    value = data.aws_ami.latest-amazon-linux-image.id
 }
