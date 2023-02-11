@@ -7,6 +7,7 @@ variable "subnet_cidr_block" {}
 variable "avail_zone" {}
 variable "env_prefix" {}
 variable "my_ip" {}
+variable "instance_type" {}
 
 resource "aws_vpc" "my-vpc" {
     cidr_block = var.vpc_cidr_block
@@ -91,7 +92,20 @@ resource "aws_instance" "development" {
     instance_type = var.instance_type
 
     subnet_id = aws_subnet.my-subnet-1.id
-
     vpc_security_group_ids = [aws_default_security_group.default-sg.id]
     availability_zone = var.avail_zone
+    associate_public_ip_address = true
+    key_name = "mac"
+   
+    tags = {
+        Name: "${var.env_prefix}-ec2"
+    }
+}
+
+output "ec2_public_ips" {
+    value = aws_instance.development.public_ip
+}
+
+output "ec2_public_dns" {
+    value = aws_instance.development.public_dns
 }
