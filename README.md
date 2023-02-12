@@ -1,4 +1,2 @@
-# terraform
-now testing from macbook
-terraform repo testing
-terraform repo testing from ubuntu #2
+## Terraform
+Terraform file for **EPAM Cloud & DevOps Fundamentals Autumn 2022**
