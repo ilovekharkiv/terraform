@@ -59,6 +59,12 @@ resource "aws_default_security_group" "default-sg" {
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
     egress {
         from_port = 0
         to_port = 0
@@ -98,6 +104,14 @@ resource "aws_instance" "development" {
     availability_zone = var.avail_zone
     associate_public_ip_address = true
     key_name = aws_key_pair.dev-key-pair.key_name
+
+    user_data = <<EOF
+                    #!/bin/bash
+                    sudo yum update -y && sudo yum install -y docker
+                    sudo systemctl start docker
+                    sudo usermod -aG docker ec2-user
+                    docker run -p 8080:80 nginx
+                EOF
    
     tags = {
         Name: "${var.env_prefix}-ec2"
